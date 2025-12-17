@@ -4,7 +4,7 @@ title HashCompare
 color 0A
 cls
 echo ==============================
-echo      Algorithmus wählen
+echo      choose algorithm
 echo ==============================
 echo.
 echo [1] SHA1
@@ -25,11 +25,11 @@ if %choice%==5 set "algo=MD5"
 
 cls
 echo ==============================
-echo      Methode wählen
+echo        choose method
 echo ==============================
 echo.
-echo [1] zwei Dateien vergleichen
-echo [2] Datei mit Hash-String vergleichen
+echo [1] Compare two files
+echo [2] Compare file with checksum
 echo.
 choice /C 12 /n /M ":"
 
@@ -39,25 +39,25 @@ if errorlevel 1 goto 1
 :1
 cls
 echo ==============================
-echo         Pfad Datei 1
+echo         file path 1
 echo ==============================
 echo.
 set /p pfad1=: 
 echo.
 cls
 echo ==============================
-echo         Pfad Datei 2
+echo         file path 2
 echo ==============================
 echo.
 set /p pfad2=: 
 echo.
 cls
-echo Berechnung Datei 1... 
+echo Calculating file 1... 
 powershell Get-FileHash -path %pfad1% -Algorithm %algo%
-echo Berechnung Datei 2... 
+echo Calculating file 2... 
 powershell -Command Get-FileHash -path %pfad2% -Algorithm %algo%
-echo Berechnung der Übereinstimmung... 
-powershell -NoProfile -Command ^ "if ((Get-FileHash -Path '%pfad1%' -Algorithm %algo%).Hash -eq (Get-FileHash -Path '%pfad2%' -Algorithm %algo%).Hash) { Write-Host '✅ Dateien sind IDENTISCH' } else { Write-Host '❌ Dateien unterscheiden sich' }"
+echo Comparing... 
+powershell -NoProfile -Command ^ "if ((Get-FileHash -Path '%pfad1%' -Algorithm %algo%).Hash -eq (Get-FileHash -Path '%pfad2%' -Algorithm %algo%).Hash) { Write-Host '✅ files are identical' } else { Write-Host '❌ files are NOT identical' }"
 goto beenden
 
 :2
@@ -70,17 +70,17 @@ set /p hashstring=:
 echo.
 cls
 echo ==============================
-echo          Pfad Datei
+echo           file path
 echo ==============================
 echo.
 set /p pfad1=: 
 echo.
 cls
-echo Angegebener Hash: %hashstring%
-echo Berechnung der Datei... 
+echo Given checksum: %hashstring%
+echo Calculating the file... 
 powershell Get-FileHash -path %pfad1% -Algorithm %algo%
-echo Berechnung der Übereinstimmung... 
-powershell -NoProfile -Command ^ "if ((Get-FileHash -Path '%pfad1%' -Algorithm %algo%).Hash -eq '%hashstring%') { Write-Host '✅ Datei entspricht dem HASH' } else { Write-Host '❌ Datei entspricht NICHT dem HASH' }"
+echo Comparing... 
+powershell -NoProfile -Command ^ "if ((Get-FileHash -Path '%pfad1%' -Algorithm %algo%).Hash -eq '%hashstring%') { Write-Host '✅ The file is matching the checksum' } else { Write-Host '❌ The file does NOT match the checksum' }"
 goto beenden
 
 :beenden
